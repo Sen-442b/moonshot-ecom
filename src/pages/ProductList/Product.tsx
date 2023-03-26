@@ -1,11 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { ProductComponentProps } from "../../types/product.types";
 
 const Product = (props: ProductComponentProps) => {
+  const navigate = useNavigate();
   const { product } = props;
-  const { id, image, description, name, price } = product;
+  const { slug, image, description, name, price } = product;
+
   return (
-    <div key={id} className="product-card">
+    <div className="product-card" onClick={() => navigate(`/${slug}`)}>
       <img src={image} alt={name} className="product-image" />
       <div className="product-details">
         <h2 className="product-name">{name}</h2>

@@ -14,3 +14,8 @@ export type SearchInputProps = {
 export type ProductComponentProps = {
   product: Product;
 };
+
+export type ProductListResponse = {
+  status: number;
+  products: Product[];
+};

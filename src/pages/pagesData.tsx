@@ -8,7 +8,7 @@ const pagesData: routerType[] = [
     title: "product list",
   },
   {
-    path: "/:id",
+    path: "/:slug",
     element: <IndividualProduct />,
     title: "individual product",
   },
