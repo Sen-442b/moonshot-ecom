@@ -1,7 +1,7 @@
-import { Cart } from "../types/cart.types";
+import { Cart, CartQuantity } from "../types/cart.types";
 import { Product } from "../types/product.types";
 
-const cartDummy: Cart[] = [];
+let cartDummy: Cart[] = [];
 
 const mockPostCartRequest = (
   success: boolean,
@@ -20,9 +20,36 @@ const mockPostCartRequest = (
   });
 };
 
+const mockEditCartRequest = (
+  success: boolean,
+  timeout = 300,
+  cartItemDetails: CartQuantity
+) => {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      if (success && cartItemDetails) {
+        const updatedCartDummy = cartDummy.map((cartItem) =>
+          cartItem.id === cartItemDetails.id
+            ? { ...cartItem, quantity: cartItemDetails.quantity }
+            : cartItem
+        );
+        cartDummy = updatedCartDummy;
+        res({ status: 201, cart: cartDummy });
+      } else {
+        rej({ status: 500, message: "Something went wrong" });
+      }
+    }, timeout);
+  });
+};
+
 const addToCartService = async (item: Product) => {
   const response = await mockPostCartRequest(true, 1000, item);
   return response;
 };
 
-export { addToCartService };
+const editCartService = async (cartItemDetails: CartQuantity) => {
+  const response = await mockEditCartRequest(true, 1000, cartItemDetails);
+  return response;
+};
+
+export { addToCartService, editCartService };

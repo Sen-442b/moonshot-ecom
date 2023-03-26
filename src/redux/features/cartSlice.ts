@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addToCartService } from "../../services/cartServices";
-import { Cart, CartResponse } from "../../types/cart.types";
+import { addToCartService, editCartService } from "../../services/cartServices";
+import { Cart, CartQuantity, CartResponse } from "../../types/cart.types";
 import { Product } from "../../types/product.types";
 
 const initialState = {
@@ -23,6 +23,14 @@ const addToCartAction = createAsyncThunk(
       //replace with valid error type
       thunkAPI.rejectWithValue(error.message || "Something went wrong");
     }
+  }
+);
+
+const changeCartQuantityAction = createAsyncThunk(
+  "cart/editCart",
+  async (cartItemDetails: CartQuantity, thunkAPI) => {
+    cartItemDetails;
+    const response = (await editCartService(cartItemDetails)) as CartResponse;
   }
 );
 
