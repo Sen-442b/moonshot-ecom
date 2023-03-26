@@ -4,7 +4,7 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import { BrowserRouter } from "react-router-dom";
 import ProductList from "./pages/ProductList/ProductList";
-import Router from "./router/router";
+import Router from "./router/Router";
 //
 function App() {
   const [count, setCount] = useState(0);
