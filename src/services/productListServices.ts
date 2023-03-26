@@ -37,10 +37,32 @@ const mockRequest = (success: boolean, timeout = 300) => {
   });
 };
 
+const mockGetRequestById = (success: boolean, timeout = 300, slug: string) => {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      if (success) {
+        res({
+          status: 200,
+          product: productsDummy.find(
+            ({ slug: prodSlug }) => prodSlug === slug
+          ),
+        });
+      } else {
+        rej({ status: 500, message: "Something went wrong" });
+      }
+    }, timeout);
+  });
+};
+
 const getProductListService = async () => {
   //replace with actual api endpoint using axios/fetch
   const response = await mockRequest(true, 1000);
   return response;
 };
 
-export { getProductListService };
+const getSingleProductService = async (slug: string) => {
+  const response = await mockGetRequestById(true, 1000, slug);
+  return response;
+};
+
+export { getProductListService, getSingleProductService };
