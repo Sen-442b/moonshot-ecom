@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { SearchInput } from "../../components/SearchInput/SearchInput";
 import { Product } from "../../types/product.types";
 import { debounce } from "../../utils/performance.utils";
 import { compactLowerCaseStr } from "../../utils/string.utils";
@@ -48,18 +49,11 @@ const ProductList = () => {
   const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
   };
-  const debounceSearch = debounce(handleSearchInput, 300);
+
   return (
     <div className="search-product-wrapper">
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search Products"
-          onChange={debounceSearch}
-        />
-      </div>
-
       <div className="product-listing-container">
+        <SearchInput handleSearchInput={handleSearchInput} />
         {filteredProductsArray.length ? (
           filteredProductsArray.map((product) => {
             const { id, image, name, description, price } = product;

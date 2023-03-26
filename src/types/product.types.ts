@@ -5,3 +5,7 @@ export type Product = {
   description: string;
   image: string;
 };
+
+export type SearchInputProps = {
+  handleSearchInput: Function;
+};
