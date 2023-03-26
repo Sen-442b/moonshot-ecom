@@ -29,8 +29,17 @@ const addToCartAction = createAsyncThunk(
 const changeCartQuantityAction = createAsyncThunk(
   "cart/editCart",
   async (cartItemDetails: CartQuantity, thunkAPI) => {
-    cartItemDetails;
-    const response = (await editCartService(cartItemDetails)) as CartResponse;
+    try {
+      const response = (await editCartService(cartItemDetails)) as CartResponse;
+      if (response.status === 201 || response.status === 200) {
+        console.log({ response });
+        return response.cart;
+      }
+      throw response;
+    } catch (error: any) {
+      //replace with valid error type
+      thunkAPI.rejectWithValue(error.message || "Something went wrong");
+    }
   }
 );
 
@@ -52,9 +61,23 @@ const cartSlice = createSlice({
       state.hasError = true;
       state.message = action.payload;
     },
+    [changeCartQuantityAction.pending.type]: (state) => {
+      state.isLoading = true;
+    },
+    [changeCartQuantityAction.fulfilled.type]: (state, action) => {
+      state.isLoading = false;
+      state.hasError = false;
+
+      state.cart = action.payload;
+    },
+    [changeCartQuantityAction.rejected.type]: (state, action) => {
+      state.isLoading = false;
+      state.hasError = true;
+      state.message = action.payload;
+    },
   },
 });
 
 const cartReducer = cartSlice.reducer;
 
-export { cartReducer, addToCartAction };
+export { cartReducer, addToCartAction, changeCartQuantityAction };

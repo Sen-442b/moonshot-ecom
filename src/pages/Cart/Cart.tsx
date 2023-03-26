@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 
 const Cart = () => {
-  const { cart, isLoading } = useSelector(
+  const { cart, isLoading, hasError, message } = useSelector(
     (storeState: RootState) => storeState.cart
   );
 
@@ -14,6 +14,7 @@ const Cart = () => {
     0
   );
 
+  console.log({ hasError, message });
   if (isLoading) {
     return <div>Loading...</div>;
   }

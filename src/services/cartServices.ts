@@ -11,7 +11,7 @@ const mockPostCartRequest = (
   return new Promise((res, rej) => {
     setTimeout(() => {
       if (success && cartItem) {
-        cartDummy.push({ ...cartItem, quantity: 1 });
+        cartDummy = [...cartDummy, { ...cartItem, quantity: 1 }];
         res({ status: 201, cart: cartDummy });
       } else {
         rej({ status: 500, message: "Something went wrong" });
@@ -27,14 +27,15 @@ const mockEditCartRequest = (
 ) => {
   return new Promise((res, rej) => {
     setTimeout(() => {
-      if (success && cartItemDetails) {
+      if (success) {
         const updatedCartDummy = cartDummy.map((cartItem) =>
           cartItem.id === cartItemDetails.id
             ? { ...cartItem, quantity: cartItemDetails.quantity }
             : cartItem
         );
         cartDummy = updatedCartDummy;
-        res({ status: 201, cart: cartDummy });
+        console.log({ cartDummy });
+        res({ status: 201, cart: updatedCartDummy });
       } else {
         rej({ status: 500, message: "Something went wrong" });
       }
@@ -48,7 +49,7 @@ const addToCartService = async (item: Product) => {
 };
 
 const editCartService = async (cartItemDetails: CartQuantity) => {
-  const response = await mockEditCartRequest(true, 1000, cartItemDetails);
+  const response = await mockEditCartRequest(true, 0, cartItemDetails);
   return response;
 };
 
