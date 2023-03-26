@@ -1,5 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getProductListService } from "../../services/productListServices";
+import {
+  getProductListService,
+  getSingleProductService,
+} from "../../services/productListServices";
 import { Product, ProductListResponse } from "../../types/product.types";
 
 const initialState = {
@@ -7,6 +10,7 @@ const initialState = {
   isLoading: false,
   hasError: false,
   message: "",
+  singleProduct: <Product | null>null,
 };
 
 const getProductListAction = createAsyncThunk(
@@ -17,6 +21,25 @@ const getProductListAction = createAsyncThunk(
 
       if (response.status === 200) {
         return response.products;
+      }
+      throw response;
+    } catch (error: any) {
+      //replace with a valid error type
+      thunkAPI.rejectWithValue(error.message || "Something went wrong");
+    }
+  }
+);
+
+const getSingleProductAction = createAsyncThunk(
+  "productList/getSingleProductAction",
+  async (slug: string, thunkAPI) => {
+    try {
+      const response = (await getSingleProductService(slug)) as {
+        status: number;
+        product: Product;
+      };
+      if (response.status === 200) {
+        return response.product;
       }
       throw response;
     } catch (error: any) {
@@ -45,8 +68,22 @@ const productListSlice = createSlice({
       state.hasError = true;
       state.message = action.payload;
     },
+    [getSingleProductAction.pending.type]: (state) => {
+      state.isLoading = true;
+    },
+    [getSingleProductAction.fulfilled.type]: (state, action) => {
+      state.isLoading = false;
+      state.message = "";
+      state.hasError = false;
+      state.singleProduct = action.payload;
+    },
+    [getSingleProductAction.rejected.type]: (state, action) => {
+      state.isLoading = true;
+      state.hasError = true;
+      state.message = action.payload;
+    },
   },
 });
 
 const productListReducer = productListSlice.reducer;
-export { productListReducer, getProductListAction };
+export { productListReducer, getProductListAction, getSingleProductAction };
